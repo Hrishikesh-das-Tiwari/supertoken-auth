@@ -1,0 +1,21 @@
+import "../styles/globals.css";
+import React from "react";
+import { useEffect } from "react";
+import SuperTokensReact, { SuperTokensWrapper } from "supertokens-auth-react";
+import * as SuperTokensConfig from "../config/frontendConfig";
+import Session from "supertokens-auth-react/recipe/session";
+
+if (typeof window !== "undefined") {
+    SuperTokensReact.init(SuperTokensConfig.frontendConfig());
+}
+
+function MyApp({ Component, pageProps }): JSX.Element {
+
+    return (
+        <SuperTokensWrapper>
+            <Component {...pageProps} />
+        </SuperTokensWrapper>
+    );
+}
+
+export default MyApp;
