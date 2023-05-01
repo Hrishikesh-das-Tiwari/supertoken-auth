@@ -13,7 +13,7 @@ import {
   getMyWorkspace,
   createNewWorkspace,
   deleteUserForId,
-  verifyJWT,
+  deleteWorkspace,
 } from "./controllers/controller";
 
 supertokens.init(SuperTokensConfig);
@@ -40,6 +40,7 @@ app.use(middleware());
 
 app.get("/workspace", verifySession(), getMyWorkspace);
 app.post("/workspace", verifySession(), createNewWorkspace);
+app.delete("/workspace/:workspaceId", verifySession(), deleteWorkspace);
 
 app.delete("/user", verifySession(), deleteUserForId);
 

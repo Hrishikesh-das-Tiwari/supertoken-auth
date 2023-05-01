@@ -78,6 +78,28 @@ export const createNewWorkspace = async (
   }
 };
 
+export const deleteWorkspace = async (
+  req: SessionRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { workspaceId } = req.params;
+    verifyJWT(req, res);
+    let userId = req!.session!.getUserId();
+
+    await Workspace.findByIdAndDelete(workspaceId);
+    const myWorkspace = await Workspace.find({ user: userId });
+
+    res.status(200).json({
+      userId,
+      myWorkspace,
+    });
+  } catch (error: any) {
+    return next(new AppError(error.name, error.status));
+  }
+};
+
 export const deleteUserForId = async (
   req: SessionRequest,
   res: Response,

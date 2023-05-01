@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import Session from "supertokens-auth-react/recipe/session";
+import { AiFillDelete } from "react-icons/ai";
 import styles from "../styles/ProtectedHome.module.css";
 import SessionReact from "supertokens-auth-react/recipe/session";
 import SuperTokensReact from "supertokens-auth-react";
@@ -13,7 +14,7 @@ import {
   SignOutIcon,
 } from "../assets/images";
 import Image from "next/image";
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 
 interface ILink {
   name: string;
@@ -43,6 +44,21 @@ function ProtectedPage() {
     }
     loadData();
   }, []);
+
+  async function handleDeleteButton(workspaceId) {
+    console.log("reached");
+
+    try {
+      const res = await axios.delete(
+        "http://localhost:3001/workspace/" + workspaceId
+      );
+      const { myWorkspace } = await res.data;
+      setWorkspace(myWorkspace);
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    }
+  }
 
   async function handleGetWorkspace() {
     try {
@@ -105,8 +121,8 @@ function ProtectedPage() {
           Your Workspace
         </div>
         <div className={styles.innerContent}>
-          {workspace!.map((space) => (
-            <div className={`${styles.truncate} ${styles.userId}`}>
+          {workspace!.map((space, index) => (
+            <div key={index} className={`${styles.truncate} ${styles.userId}`}>
               <div className="text-red-600 mb-2">
                 WorkspaceID : <span className="text-black">{space?._id}</span>
               </div>
@@ -114,6 +130,12 @@ function ProtectedPage() {
                 Workspace Name :{" "}
                 <span className="text-black">{space?.name}</span>
               </div>
+              <button
+                onClick={() => handleDeleteButton(space?._id)}
+                className="bg-black hover:bg-stone-600 text-white font-bold py-2 px-4 rounded-full absolute top-3 right-0 m-8 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+              >
+                <AiFillDelete />
+              </button>
             </div>
           ))}
 
